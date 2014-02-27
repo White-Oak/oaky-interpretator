@@ -4,32 +4,11 @@
  */
 package org.whiteoak.parsing.interpretating;
 
-import java.io.ByteArrayOutputStream;
-import org.whiteoak.parsing.interpretating.ast.BooleanExpression;
-import org.whiteoak.parsing.interpretating.ast.Expression;
-import org.whiteoak.parsing.interpretating.ast.Function;
-import org.whiteoak.parsing.interpretating.ast.CallVariable;
-import org.whiteoak.parsing.interpretating.ast.DefinitionExpression;
-import org.whiteoak.parsing.interpretating.ast.Script;
-import org.whiteoak.parsing.interpretating.ast.For;
-import org.whiteoak.parsing.interpretating.ast.VariableAssigning;
-import org.whiteoak.parsing.interpretating.ast.IfCall;
-import org.whiteoak.parsing.interpretating.ast.CalculateableValue;
-import org.whiteoak.parsing.interpretating.ast.CallExpression;
-import org.whiteoak.parsing.interpretating.ast.RuntimeCallExpression;
-import org.whiteoak.parsing.interpretating.ast.BreakExpression;
-import org.whiteoak.parsing.interpretating.ast.CallFunction;
-import org.whiteoak.parsing.interpretating.ast.Constant;
-import org.whiteoak.parsing.interpretating.ast.While;
-import org.whiteoak.parsing.interpretating.exceptions.InterpretatingException;
-import org.whiteoak.parsing.interpretating.exceptions.BadBooleanExpressionException;
-import org.whiteoak.parsing.interpretating.exceptions.AccessChangedException;
-import org.whiteoak.parsing.interpretating.exceptions.BadScriptException;
-import org.whiteoak.utils.ByteVector;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Stack;
+import org.whiteoak.parsing.interpretating.ast.*;
+import org.whiteoak.parsing.interpretating.exceptions.*;
 
 /**
  *
@@ -149,6 +128,7 @@ public class Interpretator {
 		constants.addConstant(constantse);
 	    }
 	}
+	constants.addConstant(new Constant("LINE_SEPARATOR", System.lineSeparator()));
 	constantsset = constantses;
 	//
 	functions = new Functions();
