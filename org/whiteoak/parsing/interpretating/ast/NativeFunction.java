@@ -11,4 +11,8 @@ public class NativeFunction extends Function {
 	super(name, amountofpars, true);
     }
 
+    public NativeFunction(String name) {
+	super(name, 0, true);
+    }
+
 }
