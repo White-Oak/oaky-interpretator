@@ -4,23 +4,11 @@
  */
 package org.whiteoak.parsing.interpretating;
 
-import org.whiteoak.parsing.interpretating.ast.AbstractExpression;
-import org.whiteoak.parsing.interpretating.ast.BreakExpression;
-import org.whiteoak.parsing.interpretating.ast.CallFunction;
-import org.whiteoak.parsing.interpretating.ast.DefinitionExpression;
-import org.whiteoak.parsing.interpretating.ast.Function;
-import org.whiteoak.parsing.interpretating.ast.IfCall;
-import org.whiteoak.parsing.interpretating.ast.Script;
-import org.whiteoak.parsing.interpretating.ast.VariableAssigning;
-import org.whiteoak.parsing.interpretating.ast.Constant;
-import org.whiteoak.parsing.interpretating.ast.Cycle;
-import org.whiteoak.parsing.interpretating.ast.Value;
-import org.whiteoak.parsing.interpretating.exceptions.BadScriptException;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Random;
 import java.util.Stack;
+import org.whiteoak.parsing.interpretating.ast.*;
+import org.whiteoak.parsing.interpretating.exceptions.BadScriptException;
 
 /**
  *
@@ -222,6 +210,9 @@ public class Runner {
 		} catch (InterruptedException ex) {
 		    ex.printStackTrace();
 		}
+		break;
+	    case "concat":
+		ret = values[0].getValue().concat(values[1].getValue());
 		break;
 	    default:
 		ret = iAcceptable.callNativeFunction(name, values);
