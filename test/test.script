@@ -1,7 +1,8 @@
 if (1 == 1){
     test {}
 }
-else{
+test {}
+if (1 == 2){
     test {}
     test {}
 }

@@ -133,6 +133,9 @@ public class Runner {
 			printToStream("If statement returned truth", baos);
 		    } else {
 			abst = ifCall.getElseBlock();
+			if (abst == null) {
+			    continue;
+			}
 			printToStream("If statement returned false", baos);
 		    }
 		} else if (abst instanceof Cycle) {

@@ -105,17 +105,18 @@ public class Interpretator {
 	    throw new NullPointerException("Null Parameters");
 	}
 	long start = System.currentTimeMillis();
-//	String[] lines = getLines(s);//getting list of all lines in the file
 	String[] lines = s.split(System.lineSeparator());
 	for (String line : lines) {
+	    String string = line;
 	    try {
-		String string = line;
 		parseLine(string);
 	    } catch (InterpretatingException ex) {
 		exhandler.acceptException(ex);
+	    } catch (Exception e) {
+		System.out.println("at line " + string);
+		exhandler.acceptException(e);
 	    }
 	}
-	script.finishedParsing();
 	if (log) {
 	    System.out.println("Parsing took " + ((long) (System.currentTimeMillis() - start)) + " ms");
 	}
@@ -152,34 +153,10 @@ public class Interpretator {
 	this.exhandler = exhandler;
 	runner = new Runner(constants, exhandler, functions, script);
     }
-    //
-    //
-    //
 
-    private String[] getLines(String s) {
-	ArrayList<String> v = new ArrayList<>();
-	int previouscut = 0;
-	for (int i = 0; i < s.length(); i++) {
-	    char c = s.charAt(i);
-	    if (c == 13) {
-		v.add(s.substring(previouscut, i));
-		i++;
-		previouscut = i + 1;
-		continue;
-	    }
-	    if (c == 10) {
-		v.add(s.substring(previouscut, i));
-		previouscut = i + 1;
-	    }
-	}
-	if (previouscut < s.length() && previouscut != -1) {
-	    v.add(s.substring(previouscut));//Adding last line
-	}
-	String[] str = new String[v.size()];
-	v.toArray(str);
-	return str;
-    }
-
+    //
+    //
+    //
     private void parseLine(String s) throws InterpretatingException {
 	s = s.trim();
 	if (s.length() == 0) {
@@ -259,7 +236,7 @@ public class Interpretator {
 
 		break;
 	    case CONTAINER_END:
-		((DefinitionExpression) (definitionExpressions.pop())).finishedParsing();
+		definitionExpressions.pop();
 		if (definitionExpressions.empty()) {
 		    throw new BadScriptException("Wrong numbers of closing '}'");
 		}

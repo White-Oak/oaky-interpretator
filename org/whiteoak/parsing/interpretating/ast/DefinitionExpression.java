@@ -17,25 +17,18 @@ import org.whiteoak.parsing.interpretating.exceptions.InterpretatingException;
 public abstract class DefinitionExpression extends DefinitiveValue {
 
     ArrayList<AbstractExpression> expressions = new ArrayList<>();
-    private AbstractExpression[] exps;
     private boolean breaked;
 
     public int size() {
-	return expressions == null ? exps.length : expressions.size();
+	return expressions.size();
     }
 
     public synchronized void addElement(AbstractExpression obj) throws InterpretatingException {
 	expressions.add(obj);
     }
 
-    public void finishedParsing() throws NullPointerException {
-	exps = new AbstractExpression[expressions.size()];
-	expressions.toArray(exps);
-	expressions = null;
-    }
-
     public AbstractExpression getLine(int i) throws NullPointerException {
-	return exps[i];
+	return expressions.get(i);
     }
 
     public void breakIt() {
