@@ -14,6 +14,7 @@ import org.whiteoak.parsing.interpretating.exceptions.InterpretatingException;
 public class IfCall extends DefinitionExpression {
 
     private final BooleanExpression booleanExpression;
+    private ElseBranch elseBlock;
 
     public IfCall(BooleanExpression booleanExpression) {
 	this.booleanExpression = booleanExpression;
@@ -26,4 +27,13 @@ public class IfCall extends DefinitionExpression {
     public IfCall getInvertedInstance() {
 	return new IfCall(booleanExpression.getInvertedInstance());
     }
+
+    public ElseBranch getElseBlock() {
+	return elseBlock;
+    }
+
+    public void setElseBlock(ElseBranch elseBlock) {
+	this.elseBlock = elseBlock;
+    }
+
 }

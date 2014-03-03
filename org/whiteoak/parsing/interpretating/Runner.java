@@ -128,11 +128,12 @@ public class Runner {
 		break;
 	    } else if (abst instanceof DefinitionExpression) {
 		if (abst instanceof IfCall) {
-		    if (((IfCall) abst).testTruth(dh)) {
+		    final IfCall ifCall = (IfCall) abst;
+		    if (ifCall.testTruth(dh)) {
 			printToStream("If statement returned truth", baos);
 		    } else {
+			abst = ifCall.getElseBlock();
 			printToStream("If statement returned false", baos);
-			continue;
 		    }
 		} else if (abst instanceof Cycle) {
 		    Cycle cycle = (Cycle) abst;

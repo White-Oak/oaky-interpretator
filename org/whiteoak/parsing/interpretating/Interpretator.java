@@ -208,12 +208,9 @@ public class Interpretator {
 	    } else if (temp.startsWith("for")) {
 		subtype = FOR_CYCLE;
 	    } else if (temp.startsWith("else")) {
-		//Hehe =)
-		//changing else branch to a new if
-		subtype = IF_BLOCK;
 		if (definitionExpressions.peek() instanceof IfCall) {
 		    IfCall ifCall = (IfCall) definitionExpressions.peek();
-		    definitionExpressions.push(ifCall.getInvertedInstance());
+		    ifCall.setElseBlock(new ElseBranch());
 		    return;
 		}
 	    } else {
