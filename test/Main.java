@@ -5,13 +5,11 @@
  */
 package test;
 
-import org.whiteoak.parsing.interpretating.ExceptionHandler;
-import org.whiteoak.parsing.interpretating.IAcceptable;
-import org.whiteoak.parsing.interpretating.Interpretator;
-import org.whiteoak.parsing.interpretating.ast.Constant;
-import org.whiteoak.parsing.interpretating.ast.Function;
-import org.whiteoak.parsing.interpretating.ast.NativeFunction;
-import org.whiteoak.parsing.interpretating.ast.Value;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.whiteoak.parsing.interpretating.*;
+import org.whiteoak.parsing.interpretating.ast.*;
 
 /**
  *
@@ -33,7 +31,11 @@ public class Main implements IAcceptable, ExceptionHandler {
 
     public void doThing() {
 	Interpretator interpretator = new Interpretator(c, f, "lol", this);
-	interpretator.parse("test {}", true);
+	try {
+	    interpretator.parse(getClass().getResourceAsStream("/test/test.script"), true);
+	} catch (IOException ex) {
+	    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+	}
 	interpretator.run(this, true);
     }
 

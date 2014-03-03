@@ -208,9 +208,11 @@ public class Interpretator {
 	    } else if (temp.startsWith("for")) {
 		subtype = FOR_CYCLE;
 	    } else if (temp.startsWith("else")) {
-		if (definitionExpressions.peek() instanceof IfCall) {
-		    IfCall ifCall = (IfCall) definitionExpressions.peek();
-		    ifCall.setElseBlock(new ElseBranch());
+		if (definitionExpressions.peek().getLastOne() instanceof IfCall) {
+		    IfCall ifCall = (IfCall) definitionExpressions.peek().getLastOne();
+		    final ElseBranch elseBranch = new ElseBranch();
+		    ifCall.setElseBlock(elseBranch);
+		    definitionExpressions.push(elseBranch);
 		    return;
 		}
 	    } else {

@@ -7,8 +7,8 @@
  */
 package org.whiteoak.parsing.interpretating.ast;
 
-import org.whiteoak.parsing.interpretating.exceptions.InterpretatingException;
 import java.util.ArrayList;
+import org.whiteoak.parsing.interpretating.exceptions.InterpretatingException;
 
 /**
  *
@@ -44,5 +44,9 @@ public abstract class DefinitionExpression extends DefinitiveValue {
 
     public boolean isBreaked() {
 	return breaked;
+    }
+
+    public AbstractExpression getLastOne() {
+	return expressions.get(expressions.size() - 1);
     }
 }
