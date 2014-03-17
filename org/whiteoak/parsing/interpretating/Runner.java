@@ -178,9 +178,9 @@ public class Runner {
 	switch (name) {
 	    case "println":
 		if (log) {
-		    System.out.println("Output: " + values[0].getValue());
+		    printToStream("Output: " + values[0].getValue(), baos);
 		}
-		printToStream("Output: " + values[0].getValue(), baos);
+		System.out.println("Output: " + values[0].getValue());
 		break;
 	    case "destroy":
 		vh.getVariables().removeVariable(values[0].getName() == null ? "return" : values[0].getName());
@@ -194,6 +194,12 @@ public class Runner {
 		break;
 	    case "time":
 		ret = String.valueOf(System.currentTimeMillis() - start);
+		break;
+	    case "currentTime":
+		ret = String.valueOf(System.currentTimeMillis());
+		break;
+	    case "invertBoolean":
+		ret = String.valueOf(!Boolean.parseBoolean(values[0].getValue()));
 		break;
 	    case "sleep":
 		try {
