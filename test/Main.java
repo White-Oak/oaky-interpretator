@@ -37,6 +37,7 @@ public class Main implements IAcceptable, ExceptionHandler {
 	    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 	}
 	interpretator.run(this, true);
+	interpretator.run(this, true);
     }
 
     @Override

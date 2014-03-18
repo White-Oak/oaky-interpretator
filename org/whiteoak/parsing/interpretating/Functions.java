@@ -4,9 +4,8 @@
  */
 package org.whiteoak.parsing.interpretating;
 
-import org.whiteoak.parsing.interpretating.ast.Function;
 import java.util.HashMap;
-import java.util.Hashtable;
+import org.whiteoak.parsing.interpretating.ast.Function;
 
 /**
  *

@@ -72,6 +72,8 @@ public class Runner {
 	functions.addFunction(new Function("time", 0, true));
 	functions.addFunction(new Function("sleep", 1, true));
 	functions.addFunction(new Function("pause", 0, true));
+	functions.addFunction(new Function("invertBoolean", 1, true));
+	functions.addFunction(new Function("currentTime", 0, true));
     }
 
     private void addC() {

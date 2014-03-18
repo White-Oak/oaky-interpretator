@@ -1,8 +1,6 @@
-if (1 == 1){
-    test {}
+var = 1
+var = var + 1
+while(var < 30){
+var = var + 1
 }
-test {}
-if (1 == 2){
-    test {}
-    test {}
-}
+println {var}

@@ -63,7 +63,9 @@ public class Interpretator {
     public void run(IAcceptable acceptable, boolean log) {
 //	dh.setRunner(runner);
 	runner.run(acceptable, log);
-	init(constantsset, functionsset, script.getName(), exhandler);
+	initializeHolders(constantsset, functionsset);
+	runner = new Runner(constants, exhandler, functions, script);
+
     }
 
     public String getLog() throws IOException {
@@ -123,6 +125,20 @@ public class Interpretator {
     }
 
     private void init(Constant[] constantses, Function[] function, String scriptname, ExceptionHandler exhandler) {
+	initializeHolders(constantses, function);
+	//
+	definitionExpressions = new Stack<>();
+	script = new Script(scriptname);
+	definitionExpressions.push(script);
+	//
+	if (exhandler == null) {
+	    throw new NullPointerException("Handler must not be a null pointer");
+	}
+	this.exhandler = exhandler;
+	runner = new Runner(constants, exhandler, functions, script);
+    }
+
+    private void initializeHolders(Constant[] constantses, Function[] function) {
 	constants = new Constants();
 	if (constantses != null) {
 	    for (Constant constantse : constantses) {
@@ -142,16 +158,6 @@ public class Interpretator {
 	//
 	vh = new ValueHolders(constants, new Variables());
 	dh = new DefinedHolders(vh, functions);
-	//
-	definitionExpressions = new Stack<>();
-	script = new Script(scriptname);
-	definitionExpressions.push(script);
-	//
-	if (exhandler == null) {
-	    throw new NullPointerException("Handler must not be a null pointer");
-	}
-	this.exhandler = exhandler;
-	runner = new Runner(constants, exhandler, functions, script);
     }
 
     //
@@ -315,13 +321,13 @@ public class Interpretator {
 	//detection type
 	BooleanExpression.Type type;
 	final String[] str = {"==", "<", ">", "!="};
-	if (s.indexOf(str[0]) != -1) {
+	if (s.contains(str[0])) {
 	    type = BooleanExpression.Type.EQUALS;
-	} else if (s.indexOf(str[1]) != -1) {
+	} else if (s.contains(str[1])) {
 	    type = BooleanExpression.Type.LESS;
-	} else if (s.indexOf(str[2]) != -1) {
+	} else if (s.contains(str[2])) {
 	    type = BooleanExpression.Type.BIGGER;
-	} else if (s.indexOf(str[3]) != -1) {
+	} else if (s.contains(str[3])) {
 	    type = BooleanExpression.Type.NOT_EQUALS;
 	} else {
 	    throw new BadBooleanExpressionException(s + "is bad boolean expression");
