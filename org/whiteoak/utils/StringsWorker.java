@@ -91,8 +91,7 @@ public class StringsWorker {
     public static String castToLinuxWayLF(String s) {
 	String[] ret = getLines(s);
 	StringBuilder res = new StringBuilder();
-	for (int i = 0; i < ret.length; i++) {
-	    String string = ret[i];
+	for (String string : ret) {
 	    res.append(string).append('\n');
 	}
 	return res.toString();
