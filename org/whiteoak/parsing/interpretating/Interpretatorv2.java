@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.Data;
+import lombok.*;
 
 /**
  *
@@ -12,31 +12,27 @@ import lombok.Data;
  */
 public class Interpretatorv2 {
 
-    public void parse(InputStream is) throws IOException {
+    public static void parse(InputStream is) throws IOException {
 	BufferedReader r = new BufferedReader(new InputStreamReader(is));
 	TokenSupplier tokenSupplier = new TokenSupplier(r);
 	proc(tokenSupplier);
     }
 
-    private void proc(TokenSupplier supplier) {
+    private static void proc(TokenSupplier supplier) {
 	List<Token> tokens = new LinkedList();
 	Token get;
 	while ((get = supplier.get()) != null) {
 	    tokens.add(get);
 	}
-	for (Token token : tokens) {
-
-	}
+	tokens.stream().forEach((token) -> {
+	    System.out.println(token.type + " token: " + token.value);
+	});
     }
 
-    class TokenSupplier {
+    @RequiredArgsConstructor static class TokenSupplier {
 
 	private final BufferedReader reader;
-	private Queue<Token> tokens;
-
-	public TokenSupplier(BufferedReader reader) {
-	    this.reader = reader;
-	}
+	private final Queue<Token> tokens = new LinkedList<>();
 
 	public Token get() {
 
@@ -66,35 +62,59 @@ public class Interpretatorv2 {
 	    String readLine = reader.readLine();
 	    GrowingToken currentToken = null;
 	    if (readLine != null) {
+		readLine = readLine.trim();
 		for (int i = 0; i < readLine.length(); i++) {
 		    char c = readLine.charAt(i);
-		    //skip any whitespaces for the fuck sake please
-		    if (Character.isWhitespace(c)) {
-			continue;
-		    }
-		    //if suddenly '/' character is met
-		    if (c == '/') {
-			//if it's not the end of line
-			if (i != readLine.length() - 1) {
-			    //if it is '//' suddenly
-			    if (readLine.charAt(i + 1) == '/') {
-				//get the fuck out of here the rest is a comment anyway
-				if (currentToken != null) {
-				    //don't forget about unfinished token though
-				    tokens.add(currentToken.finish());
-				}
-				return;
-			    }
+		    if (!checkIfComment(c, readLine, i, currentToken)) {
+			//if it is a start of a line or we've just been finished with a previous token
+			if (currentToken == null) {
+			    currentToken = new GrowingToken(detect(c, null));
+			    currentToken.grow(c);
+			} else {
+			    currentToken.grow(c);
+			}
+			if (currentToken.isGrown()) {
+			    tokens.add(currentToken.finish());
+			    currentToken = null;
 			}
 		    }
-		    //if it is a start of a line or we've just been finished with a previous token
-		    if (currentToken == null) {
-			currentToken = new GrowingToken(detect(c, null));
-		    } else {
-			Token.Type detect = detect(c, currentToken);
-		    }
+		}
+		if (currentToken != null) {
+		    tokens.add(currentToken.finish());
 		}
 	    }
+	}
+
+	private boolean checkIfComment(char c, String readLine, int i, GrowingToken currentToken) {
+	    //if suddenly '/' character is met
+	    if (c == '/') {
+		//if it is '//' suddenly
+		if (isComment(readLine, i)) {
+		    //get the fuck out of here the rest is a comment anyway
+		    if (currentToken != null) {
+			//don't forget about unfinished token though
+			tokens.add(currentToken.finish());
+		    }
+		    return true;
+		} else {
+		    addErrorToken("Single '/' was met. Is it a comment?..");
+		}
+	    }
+	    return false;
+	}
+
+	private void addErrorToken(String message) {
+	    Token errorToken = getErrorToken(message);
+	    tokens.add(errorToken);
+	    tokens.add(null);
+	}
+
+	private Token getErrorToken(String message) {
+	    return new Token(Token.Type.ERROR, message);
+	}
+
+	private boolean isComment(String readLine, int i) {
+	    return i != readLine.length() - 1 && readLine.charAt(i + 1) == '/';
 	}
 
 	private Token.Type detect(char c, GrowingToken currentToken) {
@@ -117,9 +137,36 @@ public class Interpretatorv2 {
 
 	private final Token.Type type;
 	private final StringBuilder value = new StringBuilder();
+	@Getter private boolean grown = false;
+
+	private Token.Type detect(char c) {
+	    if (Character.isAlphabetic(c)) {
+		return Token.Type.IDENT;
+	    }
+	    if (Character.isDigit(c)) {
+		if (getType() == Token.Type.IDENT) {
+		    return Token.Type.IDENT;
+		} else {
+		    return Token.Type.NUMBER;
+		}
+	    } else {
+		return Token.Type.OTHER;
+	    }
+	}
 
 	public GrowingToken(Token.Type type) {
 	    this.type = type;
+	}
+
+	public void grow(char c) {
+	    if (grown) {
+		return;
+	    }
+	    if (Character.isWhitespace(c)) {
+		grown = true;
+	    }
+	    Token.Type detect = detect(c);
+	    value.append(c);
 	}
 
 	public StringBuilder append(Object obj) {
@@ -191,7 +238,7 @@ public class Interpretatorv2 {
 
 	enum Type {
 
-	    IDENT, NUMBER, OTHER
+	    IDENT, NUMBER, OTHER, ERROR
 	}
     }
 

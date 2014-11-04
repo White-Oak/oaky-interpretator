@@ -5,7 +5,7 @@
  */
 package test;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.whiteoak.parsing.interpretating.*;
@@ -22,11 +22,9 @@ public class Main implements IAcceptable, ExceptionHandler {
     };
     Constant[] c = {};
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-	new Main().doThing();
+    public static void main(String[] args) throws Exception {
+//	new Main().doThing();
+	Interpretatorv2.parse(new FileInputStream(new File("script")));
     }
 
     public void doThing() {
