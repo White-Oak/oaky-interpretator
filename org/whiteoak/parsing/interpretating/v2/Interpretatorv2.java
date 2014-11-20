@@ -1,7 +1,8 @@
 package org.whiteoak.parsing.interpretating.v2;
 
 import java.io.*;
-import java.util.*;
+import org.whiteoak.parsing.interpretating.exceptions.BadScriptException;
+import org.whiteoak.parsing.interpretating.exceptions.InterpretatingException;
 
 /**
  *
@@ -9,21 +10,17 @@ import java.util.*;
  */
 public class Interpretatorv2 {
 
-    public static void parse(InputStream is) throws IOException {
+    public static void parse(InputStream is) throws IOException, InterpretatingException {
 	BufferedReader r = new BufferedReader(new InputStreamReader(is));
 	TokenSupplier tokenSupplier = new TokenSupplier(r);
 	proc(tokenSupplier);
     }
 
-    private static void proc(TokenSupplier supplier) {
-	List<Token> tokens = new LinkedList();
+    private static void proc(TokenSupplier supplier) throws BadScriptException, IOException {
 	Token get;
 	while ((get = supplier.get()) != null) {
-	    tokens.add(get);
+	    System.out.println(get.getType() + " token: " + get.getValue());
 	}
-	tokens.stream().forEach((token) -> {
-	    System.out.println(token.getType() + " token: " + token.getValue());
-	});
     }
 
 }

@@ -31,15 +31,26 @@ class GrowingToken {
 	this.type = type;
     }
 
-    public void grow(char c) {
+    public void grow(char c, char lookahead) {
 	if (grown) {
 	    return;
 	}
-	if (Character.isWhitespace(c)) {
+//	Token.Type detect = detect(c);
+	if (type == Token.Type.QUOTAGE) {
+	    if (c != '"') {
+		value.append(c);
+	    } else if (value.length() != 0) {
+		grown = true;
+	    }
+	    return;
+	}
+	value.append(c);
+	if (Character.isWhitespace(lookahead)) {
 	    grown = true;
 	}
-	Token.Type detect = detect(c);
-	value.append(c);
+	if (!Character.isAlphabetic(lookahead)) {
+	    grown = true;
+	}
     }
 
     public Token.Type getType() {
